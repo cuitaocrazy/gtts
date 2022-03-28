@@ -29,13 +29,13 @@ async function * getAudio (text: string, opts: GttsOptions = {}): AsyncIterableI
     return Buffer.from(audioBase64, 'base64')
   }
 
-  for (const textLine of textToSentences(text)) {
+  for (const sentence of textToSentences(text)) {
     try {
-      const buffer = await getBuffer(textLine)
+      const buffer = await getBuffer(sentence)
 
       yield buffer
     } catch (e) {
-      console.error('错误:' + textLine)
+      console.error('error:' + sentence)
     }
   }
 }

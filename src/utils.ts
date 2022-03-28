@@ -1,29 +1,21 @@
-const returnSplitter = (str: string) => str.split(/[\r\n]/)
+const splitterBuilder = (punctuation: RegExp | string, appendPunctuation: string) => (str: string) => str.split(punctuation)
   .map(line => line.trim())
   .filter(line => line.length > 0)
-  .map(line => endSymbol(line[line.length - 1]) ? line : line + '.')
+  .map(line => isEndSymbol(line[line.length - 1]) ? line : line + appendPunctuation)
 
-const endSymbol = (c: string) => c === '.' || c === '!' || c === '?' || c === ';' || c === ':' || c === ',' || c === '"' || c === '\'' || c === '(' || c === ')' || c === '[' || c === ']' || c === '{' || c === '}'
+const endSymbols = ['.', '!', '?', ';']
 
-const fullStopSplitter = (str: string) => str.split(/\.\s/)
-  .map(line => line.trim())
-  .filter(line => line.length > 0)
-  .map(line => endSymbol(line[line.length - 1]) ? line : line + '.')
+const isEndSymbol = (c: string) => endSymbols.includes(c)
 
-const questionMarkSplitter = (str: string) => str.split('?')
-  .map(line => line.trim())
-  .filter(line => line.length > 0)
-  .map(line => endSymbol(line[line.length - 1]) ? line : line + '?')
+const returnSplitter = splitterBuilder(/[\r\n]/, '.')
 
-const semicolonSplitter = (str: string) => str.split(';')
-  .map(line => line.trim())
-  .filter(line => line.length > 0)
-  .map(line => endSymbol(line[line.length - 1]) ? line : line + ';')
+const fullStopSplitter = splitterBuilder(/\.\s/, '.')
 
-const exclamationSplitter = (str: string) => str.split('!')
-  .map(line => line.trim())
-  .filter(line => line.length > 0)
-  .map(line => endSymbol(line[line.length - 1]) ? line : line + '!')
+const questionMarkSplitter = splitterBuilder('?', '?')
+
+const semicolonSplitter = splitterBuilder(';', ';')
+
+const exclamationSplitter = splitterBuilder('!', '!')
 
 function * textSplit (str: string, splitter: ((str: string) => string[])[]): IterableIterator<string> {
   if (str.length > 100) {
