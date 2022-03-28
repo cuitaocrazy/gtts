@@ -6,6 +6,9 @@ npm i
 npm install
 ```
 
+## uninstall
+npm uninstall -g
+
 ## example
 ```bash
 gtts -i test.txt
