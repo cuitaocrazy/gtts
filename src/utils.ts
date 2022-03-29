@@ -17,8 +17,16 @@ const semicolonSplitter = splitterBuilder(';', ';')
 
 const exclamationSplitter = splitterBuilder('!', '!')
 
+const colonSplitter = splitterBuilder(':', ':')
+
+const commaSplitter = splitterBuilder(',', ',')
+
+const wordSplitter = splitterBuilder(/\s+/, '')
+
+const maxLength = 200
+
 function * textSplit (str: string, splitter: ((str: string) => string[])[]): IterableIterator<string> {
-  if (str.length > 100) {
+  if (str.length > maxLength) {
     const [currentSplitter, ...otherSplitter] = splitter
     const lines = currentSplitter(str)
 
@@ -40,10 +48,10 @@ export function * textToSentences (str: string): IterableIterator<string> {
   str = str.replace(/"/g, '\\\\\\"')
   let tmp = ''
 
-  for (const sentence of textSplit(str, [returnSplitter, fullStopSplitter, questionMarkSplitter, exclamationSplitter, semicolonSplitter])) {
+  for (const sentence of textSplit(str, [returnSplitter, fullStopSplitter, questionMarkSplitter, exclamationSplitter, semicolonSplitter, colonSplitter, commaSplitter, wordSplitter])) {
     const newSentence = tmp === '' ? sentence : tmp + ' ' + sentence
 
-    if (tmp.length > 100 || newSentence.length > 100) {
+    if (tmp.length > maxLength || newSentence.length > maxLength) {
       yield tmp
       tmp = sentence
     } else {
