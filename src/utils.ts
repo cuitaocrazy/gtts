@@ -31,7 +31,7 @@ function * textSplit (str: string, splitter: ((str: string) => string[])[]): Ite
     const lines = currentSplitter(str)
 
     for (const line of lines) {
-      if (line.length > 100) {
+      if (line.length > maxLength) {
         if (otherSplitter.length > 0) {
           yield * textSplit(line, otherSplitter)
         } else {
